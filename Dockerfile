@@ -1,10 +1,12 @@
-FROM ansible:centos7-ansible
+FROM centos/systemd
 MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 ENV ANSIBLE_TOWER_VER latest
 ENV ADMIN_PASSWORD changeme
 
 RUN yum -y update; yum clean all
+RUN yum -y install sudo epel-release; yum clean all
+RUN yum -y install ansible; yum clean all
 
 #Sudo requires a tty. fix that.
 RUN sed -i 's/.*requiretty$/#Defaults requiretty/' /etc/sudoers
