@@ -19,7 +19,8 @@ RUN mv ansible-tower-setup-* ansible-tower-setup
 ADD ./inventory /ansible-tower-setup/inventory
 RUN sed -i "s/changeme/${ADMIN_PASSWORD}/g" /ansible-tower-setup/inventory
 
-RUN cd /ansible-tower-setup \
-  && ./setup.sh
+RUN cd ansible-tower-setup \
+  && chmod +x ./setup.sh
+  && sudo ./setup.sh
 
 EXPOSE 443 8080
