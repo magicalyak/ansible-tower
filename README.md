@@ -49,7 +49,7 @@ Valid settings for ANSIBLE_TOWER_VER are:-
 
 * Shell access whilst the container is running: `docker exec -it ansible-tower /bin/bash`
 * To monitor the logs of the container in realtime: `docker logs -f ansible-tower`
-* Upgrade to the latest version (see setting up application section) : `docker restart ansible-tower
+* Upgrade to the latest version (see setting up application section) : `docker restart ansible-tower`
 
 ## Versions
-+ **05.03.17:** Initial publish`
++ **05.03.17:** Initial publish

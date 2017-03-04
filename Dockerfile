@@ -5,7 +5,7 @@
 #  \/    \/\__,_|\__, |_|\___\__,_|_|\_/\__,_|_|\_\
 #                |___/                             
 
-FROM ilsiobase/xenial
+FROM lsiobase/xenial
 MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 # global environment settings
