@@ -9,10 +9,11 @@
 
 # ansible-tower
 Ansible Tower in a Container. Run Ansible by Red Hat's Tower through a container and let your worries be a thing of yesterday!
+Note: this is still a work in progress
 
 ## Usage
 ```
-docker create \
+docker run -d -t \
 --name=ansible-tower \
 -p 8080:8080 \
 -p 443:443 \
@@ -20,7 +21,6 @@ docker create \
 -e ADMIN_PASSWORD=changme \
 -e SERVER_NAME=localhost \
 -v </path/to/library>:/certs \
--v </path/to/database>:/var/lib/postgresql/9.4/main \
 magicalyak/ansible-tower
 ```
 ## Parameters
@@ -33,10 +33,10 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 * `-p 8080:8080` - Uses port 8080 for the Tower API, **required**.
 * `-p 443:443` - Uses port 443 for the Tower UI, **required**.
 * `-v /certs` - Certificate and license file location
-* `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades
-* `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
-* `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols). 
-* `-e SERVER_NAME=localhost` - hostname for tower to use (for cert generation). 
+* `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades (this is not working)
+* `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest. (this is not working)
+* `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols). (this is not working) 
+* `-e SERVER_NAME=localhost` - hostname for tower to use (for cert generation) (this is not working). 
 
 It is based on ubuntu xenial with s6 overlay, for shell access whilst the container is running do `docker exec -it ansible-tower /bin/bash`.
 
