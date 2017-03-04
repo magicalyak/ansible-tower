@@ -16,7 +16,7 @@ docker create \
 --name=ansible-tower \
 -p 8080:8080 \
 -p 443:443 \
--e VERSION=latest \
+-e ANSIBLE_TOWER_VER=latest \
 -e ADMIN_PASSWORD=changme \
 -v </path/to/library>:/etc \
 -v </path/to/database>:/var/lib/postgresql/9.4/main \
@@ -33,7 +33,7 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 * `-p 443:443` - Uses port 443 for the Tower UI, **required**.
 * `-v /etc` - All the configuration files for Tower's etc directory
 * `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades
-* `-e VERSION=latest` - Set to specific version of tower or put at latest.
+* `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
 * `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols). 
 
 It is based on ubuntu xenial with s6 overlay, for shell access whilst the container is running do `docker exec -it ansible-tower /bin/bash`.
@@ -41,7 +41,7 @@ It is based on ubuntu xenial with s6 overlay, for shell access whilst the contai
 ## Setting up the application
 Webui can be found at `https://<your-ip>:443`
 
-Valid settings for VERSION are:-
+Valid settings for ANSIBLE_TOWER_VER are:-
 + **`latest`**: will update ansible tower to the latest version available.
 + **`<specific-version>`**: will select a specific version (eg 3.1.0) of tower to install.
 
