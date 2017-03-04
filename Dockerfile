@@ -10,9 +10,11 @@ MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 # global environment settings
 ENV ANSIBLE_TOWER_VER=latest \
-ADMIN_PASSWORD=changme
+ADMIN_PASSWORD=changme \
+SERVER_NAME=localhost
 
 ADD ./inventory /opt/inventory
+ADD ./tower_setup_conf.yml /opt/inventory
 
 RUN \
  apt-get -y update && \
@@ -27,7 +29,8 @@ RUN \
  tar -xvf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
  rm -rf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
  mv ansible-tower-setup-* /opt/tower-setup && \
- cp /opt/inventory /opt/tower-setup/inventory && \ 
+ mv /opt/inventory /opt/tower-setup/inventory && \ 
+ mv /opt/tower_setup_conf.yml /opt/tower-setup/tower_setup_conf.yml && \
 
 # add passwords and fix locale issue
  sed -i "s/changeme/${ADMIN_PASSWORD}/g" /opt/tower-setup/inventory && \
