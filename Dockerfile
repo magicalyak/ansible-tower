@@ -49,4 +49,10 @@ RUN \
 
 # ports and volumes
 EXPOSE 443 8080
-VOLUME /var/lib/postgresql/9.4/main /etc
+VOLUME /var/lib/postgresql/9.4/main /certs
+
+# set runtime (from ybalt/ansible-tower)
+ADD docker-entrypoint.sh /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh
+ENTRYPOINT ["/docker-entrypoint.sh"]
+CMD ["ansible-tower"]
