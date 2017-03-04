@@ -14,7 +14,7 @@ ADMIN_PASSWORD=changme \
 SERVER_NAME=localhost
 
 ADD ./inventory /opt/inventory
-ADD ./tower_setup_conf.yml /opt/inventory/tower_setup_conf.yml
+ADD ./tower_setup_conf.yml /opt/tower_setup_conf.yml
 
 RUN \
  apt-get -y update && \
