@@ -53,6 +53,7 @@ VOLUME /var/lib/postgresql/9.4/main /certs
 
 # set runtime (from ybalt/ansible-tower)
 ADD docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
+RUN chmod +x /docker-entrypoint.sh && \
+    chown postgres:postgres /var/lib/postgresql/9.4/main
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["ansible-tower"]
