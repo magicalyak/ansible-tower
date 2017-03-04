@@ -10,11 +10,10 @@ MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 # global environment settings
 ENV ANSIBLE_TOWER_VER=latest \
-ADMIN_PASSWORD=changme \
+ADMIN_PASSWORD=changeme \
 SERVER_NAME=localhost
 
 ADD ./inventory /opt/inventory
-ADD ./tower_setup_conf.yml /opt/tower_setup_conf.yml
 
 RUN \
  apt-get -y update && \
@@ -30,7 +29,6 @@ RUN \
  rm -rf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
  mv ansible-tower-setup-* /opt/tower-setup && \
  mv /opt/inventory /opt/tower-setup/inventory && \ 
- mv /opt/tower_setup_conf.yml /opt/tower-setup/tower_setup_conf.yml && \
 
 # add passwords and fix locale issue
  sed -i "s/changeme/${ADMIN_PASSWORD}/g" /opt/tower-setup/inventory && \
@@ -53,7 +51,6 @@ VOLUME /var/lib/postgresql/9.4/main /certs
 
 # set runtime (from ybalt/ansible-tower)
 ADD docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh && \
-    chown postgres:postgres /var/lib/postgresql/9.4/main
+RUN chmod +x /docker-entrypoint.sh
 ENTRYPOINT ["/docker-entrypoint.sh"]
 CMD ["ansible-tower"]
