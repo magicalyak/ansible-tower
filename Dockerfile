@@ -30,15 +30,15 @@ RUN \
  cp /opt/inventory /opt/tower-setup/inventory && \ 
 
 # add passwords and fix locale issue
- sed -i "s/changeme/${ADMIN_PASSWORD}/g" /opt/ansible-tower-setup/inventory && \
- sed -i "s/lc_/#lc_/g" /opt/ansible-tower-setup/roles/postgres/templates/postgresql.conf.j2 && \
+ sed -i "s/changeme/${ADMIN_PASSWORD}/g" /opt/tower-setup/inventory && \
+ sed -i "s/lc_/#lc_/g" /opt/tower-setup/roles/postgres/templates/postgresql.conf.j2 && \
  cd /opt/tower-setup && \
  ./setup.sh && \
 
 # cleanup
  apt-get clean && \
  rm -rf \
-        /opt/ansible-tower-setup/* \
+        /opt/tower-setup/* \
         /tmp/* \
         /var/lib/apt/lists/* \
         /var/tmp/*
