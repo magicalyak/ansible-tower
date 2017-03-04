@@ -5,7 +5,7 @@
 #  \/    \/\__,_|\__, |_|\___\__,_|_|\_/\__,_|_|\_\
 #                |___/                             
 
-FROM lsiobase/xenial
+FROM ubuntu:16.04
 MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 # global environment settings
