@@ -8,7 +8,7 @@ rebuild_tower()
 	echo "Performing rebuild of tower, this could take a while!"
 	cd /opt && \
 	wget http://releases.ansible.com/awx/setup/ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
-	tar -xvf ansible-tower-setup-${ANSIBLE_TOWER_VAR}.tar.gz && \
+	tar -xvf ansible-tower-setup-*.tar.gz && \
 	mv ansible-tower-setup-* /opt/tower-setup && \
 	mv -f /opt/inventory /opt/tower-setup/inventory && \
 	cp /opt/tower-setup/inventory /opt/inventory && \
