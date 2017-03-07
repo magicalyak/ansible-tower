@@ -9,7 +9,7 @@
 
 # ansible-tower
 Ansible Tower in a Container. Run Ansible by Red Hat's Tower through a container and let your worries be a thing of yesterday!
-Note: this is still a work in progress
+Note: this is still a work in progress and the first run is going to take a while since it is rerunning the install at boot
 
 ## Usage
 ```
@@ -20,7 +20,9 @@ docker run -d -t \
 -e ANSIBLE_TOWER_VER=latest \
 -e ADMIN_PASSWORD=changme \
 -e SERVER_NAME=localhost \
+-e container=docker \
 -v </path/to/library>:/certs \
+-v /sys/fs/cgroup:/sys/fs/cgroup \
 magicalyak/ansible-tower
 ```
 ## Parameters
@@ -33,12 +35,13 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 * `-p 8080:8080` - Uses port 8080 for the Tower API, **required**.
 * `-p 443:443` - Uses port 443 for the Tower UI, **required**.
 * `-v /certs` - Certificate and license file location
-* `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades (this is not working)
-* `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest. (this is not working)
-* `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols). (this is not working) 
+* `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades (this may not be working)
+* `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
+* `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols).
 * `-e SERVER_NAME=localhost` - hostname for tower to use (for cert generation) (this is not working). 
+* `-e REBUILD=0` - set to 1 to rebuild ansible-tower. 
 
-It is based on ubuntu xenial with s6 overlay, for shell access whilst the container is running do `docker exec -it ansible-tower /bin/bash`.
+It is based on centos7, for shell access whilst the container is running do `docker exec -it ansible-tower /bin/bash`.
 
 ## Setting up the application
 Webui can be found at `https://<your-ip>:443`
@@ -51,6 +54,7 @@ For certs direction, add your license and certificates as follows:-
 + **`/certs/domain.crt`** - copied to /etc/tower/tower.cert
 + **`/certs/domain.kry`** - copied to /etc/tower/tower.key
 + **`/certs/license`** - copied to /etc/tower/license
++ **`/certs/.rebuild`** - touch this file to ensure it rebuilds (required for first boot)
 
 ## Info
 
@@ -62,5 +66,6 @@ For certs direction, add your license and certificates as follows:-
 * ybalt/ansible-tower is the original basis for this Dockerfile
 
 ## Versions
++ **05.07.17:** Replaced Ubuntu with Centos7 and made tower install on first run
 + **05.04.17:** Added docker-entrypoint.sh from ybalt/ansible-tower github
 + **05.03.17:** Initial publish

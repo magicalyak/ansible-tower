@@ -5,34 +5,22 @@
 #  \/    \/\__,_|\__, |_|\___\__,_|_|\_/\__,_|_|\_\
 #                |___/                             
 
-FROM ansible/centos7-ansible
+FROM ubuntu:16.04
 MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 # global environment settings
 ENV ANSIBLE_TOWER_VER=latest \
 ADMIN_PASSWORD=changeme \
-SERVER_NAME=localhost \
-REBUILD=0 \
-container=docker 
+SERVER_NAME=localhost
 
 ADD ./inventory /opt/inventory
 
 RUN \
-# Set systemd
- yum -y update; yum clean all; \
- (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
- rm -f /lib/systemd/system/multi-user.target.wants/*;\
- rm -f /etc/systemd/system/*.wants/*;\
- rm -f /lib/systemd/system/local-fs.target.wants/*; \
- rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
- rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
- rm -f /lib/systemd/system/basic.target.wants/*; \
- rm -f /lib/systemd/system/anaconda.target.wants/*; \
-# install Ansible
- yum makecache fast && \
- yum -y install deltarpm epel-release initscripts && \
- yum -y update && \
- yum -y install ansible sudo which wget && \
+ apt-get -y update && \
+ apt-get install -y software-properties-common && \
+ apt-add-repository -y ppa:ansible/ansible && \
+ apt-get -y update && \
+ apt-get install -y sudo wget ansible && \
 
 # install Ansible Tower
  cd /opt && \
@@ -40,27 +28,26 @@ RUN \
  tar -xvf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
  rm -rf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
  mv ansible-tower-setup-* /opt/tower-setup && \
- mv -f /opt/inventory /opt/tower-setup/inventory && \ 
- cp /opt/tower-setup/inventory /opt/inventory && \
+ mv /opt/inventory /opt/tower-setup/inventory && \ 
 
 # add passwords and fix locale issue
- sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers && \
  sed -i "s/changeme/${ADMIN_PASSWORD}/g" /opt/tower-setup/inventory && \
- echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
  sed -i "s/lc_/#lc_/g" /opt/tower-setup/roles/postgres/templates/postgresql.conf.j2 && \
  sed -i "s/ansible_all_ipv6_addresses/[]/g" /opt/tower-setup/roles/nginx/templates/nginx.conf && \
- mkdir -p /certs/.deleteme && \
- touch /certs/.rebuild && \
+ cd /opt/tower-setup && \
+ ./setup.sh && \
 
 # cleanup
- yum clean all && \
+ apt-get clean && \
  rm -rf \
+        /opt/tower-setup/* \
         /tmp/* \
+        /var/lib/apt/lists/* \
         /var/tmp/*
 
 # ports and volumes
 EXPOSE 443 8080
-VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs
+VOLUME /var/lib/postgresql/9.4/main /certs
 
 # set runtime (from ybalt/ansible-tower)
 ADD docker-entrypoint.sh /docker-entrypoint.sh
