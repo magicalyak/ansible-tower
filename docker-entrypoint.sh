@@ -63,6 +63,9 @@ if [ "$1" = 'ansible-tower' ]; then
 	fi
 	ansible-tower-service start
 	sleep inf & wait
+elif [ "$1" = 'init' ]; then
+	exec /usr/sbin/init &
+	rebuild_tower
 else
 	exec "$@"
 fi
