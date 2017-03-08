@@ -64,6 +64,9 @@ VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs
 
 # set runtime (from ybalt/ansible-tower)
 ADD ./docker-entrypoint.sh /docker-entrypoint.sh
-RUN chmod +x /docker-entrypoint.sh
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["ansible-tower"]
+ADD ./ansible-setup.service /etc/systemd/system/ansible-setup.service
+RUN chmod +x /docker-entrypoint.sh && \
+    chmod +x /etc/systemd/system/ansible-setup.service
+#ENTRYPOINT ["/docker-entrypoint.sh"]
+#CMD ["ansible-tower"]
+CMD ["/usr/sbin/init"]

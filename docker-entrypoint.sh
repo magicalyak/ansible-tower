@@ -1,4 +1,5 @@
 #!/bin/bash
+exec /usr/sbin/init
 set -e
 
 trap "kill -15 -1 && echo all proc killed" TERM KILL INT
