@@ -16,6 +16,7 @@ REBUILD=0 \
 container=docker 
 
 ADD ./inventory /opt/inventory
+ADD ./ansible-tower.service /opt/ansible-tower.service
 
 RUN \
 # Set systemd
