@@ -1,9 +1,9 @@
 [Unit]
 Description=Install Ansible Tower
-After=local-fs.target
+After=network.target
 
 [Service]
 ExecStart="/docker-entrypoint.sh ansible-tower"
 
 [Install]
-WantedBy=default.target
+WantedBy=multi-user.target

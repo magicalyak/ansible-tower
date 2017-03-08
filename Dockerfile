@@ -16,7 +16,7 @@ REBUILD=0 \
 container=docker 
 
 ADD ./inventory /opt/inventory
-ADD ./ansible-setup.service /opt/ansible-setup.service
+ADD ./ansible-setup.service /opt/ansible-setup.sh
 
 RUN \
 # Set systemd
@@ -65,9 +65,10 @@ VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs
 
 # set runtime (from ybalt/ansible-tower)
 ADD ./docker-entrypoint.sh /docker-entrypoint.sh
-ADD ./ansible-setup.service /etc/systemd/system/ansible-setup.service
 RUN chmod +x /docker-entrypoint.sh && \
-    chmod +x /etc/systemd/system/ansible-setup.service
+    chmod +x /opt/ansible-setup.sh && \
+    chmod +x /etc/rc.d/rc.local && \
+    echo "/opt/ansible-setup.sh" >> /etc/rc.local
 #ENTRYPOINT ["/docker-entrypoint.sh"]
 #CMD ["ansible-tower"]
 CMD [ "/usr/sbin/init" ]
