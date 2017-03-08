@@ -16,7 +16,7 @@ REBUILD=0 \
 container=docker 
 
 ADD ./inventory /opt/inventory
-ADD ./ansible-tower.service /opt/ansible-tower.service
+ADD ./ansible-setup.service /opt/ansible-setup.service
 
 RUN \
 # Set systemd
@@ -70,4 +70,4 @@ RUN chmod +x /docker-entrypoint.sh && \
     chmod +x /etc/systemd/system/ansible-setup.service
 #ENTRYPOINT ["/docker-entrypoint.sh"]
 #CMD ["ansible-tower"]
-CMD ["/usr/sbin/init"]
+CMD [ "/usr/sbin/init" ]
