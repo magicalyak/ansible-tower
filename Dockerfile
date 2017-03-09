@@ -10,7 +10,8 @@ MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 # global environment settings
 ENV SERVER_NAME=localhost \
-    ADMIN_PASSWORD=changeme
+    ADMIN_PASSWORD=changeme \
+    ANSIBLE_TOWER_VER=latest
 
 ADD ./inventory /opt/inventory
 ADD ./ansible-setup.service /opt/ansible-setup.service
@@ -73,6 +74,11 @@ VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs
 
 # set runtime options for ansibkle-setup
 RUN echo "Setting up ansible-setup service to run at boot" && \
+    echo "# ansible-setup.env" > /opt/ansible-setup.env && \
+    echo "SERVER_NAME=${SERVER_NAME}" >> /opt/ansible-setup.env && \
+    echo "ANSIBLE_TOWER_VER=${ANSIBLE_TOWER_VER}" >> /opt/ansible-setup.env && \
+    echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" >> /opt/ansible-setup.env && \
+    cp /opt/ansible-setup.env /certs/ansible-setup.env
     chmod +x /docker-entrypoint.sh && \
     cp /opt/ansible-setup.service /etc/systemd/system/ansible-setup.service && \
     systemctl enable ansible-setup.service

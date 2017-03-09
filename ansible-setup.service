@@ -4,6 +4,7 @@ After=network.target
 
 [Service]
 ExecStart=/docker-entrypoint.sh ansible-tower
+EnvironmentFile=-/certs/ansible-setup.env
 
 [Install]
 WantedBy=multi-user.target
