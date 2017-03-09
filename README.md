@@ -9,7 +9,8 @@
 
 # ansible-tower
 Ansible Tower in a Container. Run Ansible by Red Hat's Tower through a container and let your worries be a thing of yesterday!
-Note: this is still a work in progress and the first run is going to take a while since it is rerunning the install at boot
+**IMPORTANT: This is completely unsupported and you are on your own, if this blows up your home lab or makes SkyNet self-aware, you have no one to blame but yourself!**
+Note: This is a personal project, it is not endorsed or sanctioned by Red Hat or Ansible.
 
 ## Usage
 ```
@@ -18,9 +19,6 @@ docker run -d -t \
 --cap-add=SYS_ADMIN \
 -p 8080:8080 \
 -p 443:443 \
--e ANSIBLE_TOWER_VER=latest \
--e ADMIN_PASSWORD=changme \
--e SERVER_NAME=localhost \
 -v </path/to/library>:/certs \
 magicalyak/ansible-tower
 ```
@@ -36,6 +34,8 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 * `-p 443:443` - Uses port 443 for the Tower UI, **required**.
 * `-v /certs` - Certificate and license file location
 * `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades (this may not be working)
+
+
 * `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
 * `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols).
 * `-e SERVER_NAME=localhost` - hostname for tower to use (for cert generation) (this is not working). 
@@ -49,6 +49,11 @@ Valid settings for ANSIBLE_TOWER_VER are:-
 + **`latest`**: will update ansible tower to the latest version available.
 + **`<specific-version>`**: will select a specific version (eg 3.1.0) of tower to install.
 
+Create a file called ansible-service.env in the /certs directory (you can copy the /opt/ansible-service.env)
+* `ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
+* `ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols).
+* `SERVER_NAME=localhost` - hostname for tower to use (for cert generation) (this is not working). 
+
 For certs direction, add your license and certificates as follows:-
 + **`/certs/domain.crt`** - copied to /etc/tower/tower.cert
 + **`/certs/domain.kry`** - copied to /etc/tower/tower.key
@@ -59,13 +64,13 @@ For certs direction, add your license and certificates as follows:-
 
 * Shell access whilst the container is running: `docker exec -it ansible-tower /bin/bash`
 * To monitor the logs of the container in realtime: `docker logs -f ansible-tower`
-* Upgrade to the latest version (see setting up application section) : `docker restart ansible-tower`
+* Upgrade to the latest version (see setting up application section) : `touch /certs/.rebuild && docker restart ansible-tower`
 
 ## Credits
 * ybalt/ansible-tower is the original basis for this Dockerfile
 
 ## Versions
-+ **05.09.17:** Enabled setup to run as a service
++ **05.09.17:** Enabled setup to run as a service and removed anything redistributable from tower in build
 + **05.07.17:** Replaced Ubuntu with Centos7 and made tower install on first run
 + **05.04.17:** Added docker-entrypoint.sh from ybalt/ansible-tower github
 + **05.03.17:** Initial publish
