@@ -41,8 +41,8 @@ RUN \
  sed -i "s/changeme/$ADMIN_PASSWORD/g" /opt/inventory && \
  echo "Setting connection to $SERVER_NAME" && \
  echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
-# echo "Patching journald to log to console for Docker logs" && \
-# sed -i "s/#ForwardToConsole=no/ForwardToConsole=yes/g" /etc/systemd/journald.conf && \
+ echo "Patching journald to log to console for Docker logs" && \
+ sed -i "s/#ForwardToConsole=no/ForwardToConsole=yes/g" /etc/systemd/journald.conf && \
  echo "Setting rebuild flag in /certs in case it isn't mapped" && \
  mkdir -p /certs/.deleteme && \
  touch /certs/.rebuild && \
