@@ -58,6 +58,8 @@ if [[ $SERVER_NAME ]]; then
 			echo $SERVER_NAME > /certs/.SERVER_NAME
 			touch /certs/.rebuild
 			rebuild_tower
+		elif [[ -a /certs/.rebuild ]]; then
+		    rebuild_tower
 		fi
 	fi
 elif [[ -a /certs/.rebuild ]]; then
