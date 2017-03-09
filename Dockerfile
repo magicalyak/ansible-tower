@@ -54,6 +54,8 @@ RUN \
  sed -i "s/lc_/#lc_/g" /opt/tower-setup/roles/postgres/templates/postgresql.conf.j2 && \
  echo "Patching IPv6 check in nginx due to docker container" && \
  sed -i "s/ansible_all_ipv6_addresses/[]/g" /opt/tower-setup/roles/nginx/templates/nginx.conf && \
+ echo "Patching journald to log to console for Docker logs" && \
+ sed -i "s/#ForwardToConsole=no/ForwardToConsole=yes/g" && \
  echo "Setting rebuild flag in /certs in case it isn't mapped" && \
  mkdir -p /certs/.deleteme && \
  touch /certs/.rebuild && \
