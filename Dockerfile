@@ -9,10 +9,8 @@ FROM ansible/centos7-ansible
 MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 
 # global environment settings
-ENV ANSIBLE_TOWER_VER=latest \
-ADMIN_PASSWORD=changeme \
-SERVER_NAME=localhost \
-container=docker 
+ENV SERVER_NAME=localhost \
+    ADMIN_PASSWORD=changeme
 
 ADD ./inventory /opt/inventory
 ADD ./ansible-setup.service /opt/ansible-setup.service
@@ -36,12 +34,12 @@ RUN \
  yum -y install ansible sudo which wget && \
 
 # install Ansible Tower
- echo "Downloading the $(ANSIBLE_TOWER_VER) version of Ansible Tower" && \
+ echo "Downloading the latest version of Ansible Tower" && \
  cd /opt && \
- wget http://releases.ansible.com/awx/setup/ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
+ wget http://releases.ansible.com/awx/setup/ansible-tower-setup-latest.tar.gz && \
  echo "Configuring Ansible Tower for setup at boot" && \
- tar -xvf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
- rm -rf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
+ tar -xvf ansible-tower-setup-latest.tar.gz && \
+ rm -rf ansible-tower-setup-latest.tar.gz && \
  mv ansible-tower-setup-* /opt/tower-setup && \
  mv -f /opt/inventory /opt/tower-setup/inventory && \ 
  cp /opt/tower-setup/inventory /opt/inventory && \
