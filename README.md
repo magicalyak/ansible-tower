@@ -22,6 +22,7 @@ docker run -d -t \
 -p 8080:8080 \
 -p 443:443 \
 -v </path/to/library>:/certs \
+-v </path/to/data>:/var/lib/postgresql/9.4/main \
 magicalyak/ansible-tower
 ```
 ## Parameters
@@ -31,11 +32,12 @@ For example with a port -p external:internal - what this shows is the port mappi
 So -p 8080:80 would expose port 80 from inside the container to be accessible from the host's IP on port 8080
 http://192.168.x.x:8080 would show you what's running INSIDE the container on port 80.`
 
+* `-t` - tty allocated for logging to work.
 * `--cap-add=SYS_ADMIN` - This is needed for systemd to work usually.
 * `-p 8080:8080` - Uses port 8080 for the Tower API, **required**.
 * `-p 443:443` - Uses port 443 for the Tower UI, **required**.
-* `-v /certs` - Certificate and license file location
-* `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades (this may not be working)
+* `-v /certs` - Certificate and license file location **requires files from Setup below**.
+* `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades
 
 It is based on centos7, for shell access whilst the container is running do `docker exec -it ansible-tower /bin/bash`.
 
