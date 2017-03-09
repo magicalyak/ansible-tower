@@ -78,4 +78,4 @@ if [[ -a /certs/license ]]; then
 fi
 echo "Starting Ansible Tower Service..."
 ansible-tower-service start
-sleep inf & wait
+#sleep inf & wait
