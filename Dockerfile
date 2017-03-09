@@ -21,15 +21,15 @@ ADD ./ansible-setup.sh /opt/ansible-setup.sh
 
 RUN \
 # Set systemd
-# yum -y update; yum clean all; \
-# (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
-# rm -f /lib/systemd/system/multi-user.target.wants/*;\
-# rm -f /etc/systemd/system/*.wants/*;\
-# rm -f /lib/systemd/system/local-fs.target.wants/*; \
-# rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
-# rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
-# rm -f /lib/systemd/system/basic.target.wants/*; \
-# rm -f /lib/systemd/system/anaconda.target.wants/*; \
+ yum -y update; yum clean all; \
+ (cd /lib/systemd/system/sysinit.target.wants/; for i in *; do [ $i == systemd-tmpfiles-setup.service ] || rm -f $i; done); \
+ rm -f /lib/systemd/system/multi-user.target.wants/*;\
+ rm -f /etc/systemd/system/*.wants/*;\
+ rm -f /lib/systemd/system/local-fs.target.wants/*; \
+ rm -f /lib/systemd/system/sockets.target.wants/*udev*; \
+ rm -f /lib/systemd/system/sockets.target.wants/*initctl*; \
+ rm -f /lib/systemd/system/basic.target.wants/*; \
+ rm -f /lib/systemd/system/anaconda.target.wants/*; \
 # install Ansible
  yum makecache fast && \
  yum -y install deltarpm epel-release initscripts && \
@@ -62,7 +62,7 @@ RUN \
 
 # ports and volumes
 EXPOSE 443 8080
-VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs
+VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs /run /tmp
 
 # set runtime (from ybalt/ansible-tower)
 ADD ./docker-entrypoint.sh /docker-entrypoint.sh
@@ -70,7 +70,10 @@ RUN chmod +x /docker-entrypoint.sh && \
     chmod a+x /opt/ansible-setup.sh && \
     chmod a+x /opt/ansible-setup.service && \
     chmod a+x /etc/rc.d/rc.local && \
-    echo "/opt/ansible-setup.sh" >> /etc/rc.local
-ENTRYPOINT ["/docker-entrypoint.sh"]
-CMD ["ansible-tower"]
-#CMD [ "/usr/sbin/init" ]
+    echo "/opt/ansible-setup.sh" >> /etc/rc.local && \
+    cp /opt/ansible-setup.service /etc/systemd/system/ansible-setup.service && \
+    chmod +x /etc/systemd/system/ansible-setup.service
+RUN systemctl enable ansible-setup.service
+#ENTRYPOINT ["/docker-entrypoint.sh"]
+#CMD ["ansible-tower"]
+CMD [ "/usr/sbin/init" ]
