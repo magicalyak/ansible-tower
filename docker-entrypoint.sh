@@ -12,10 +12,10 @@ echo '                |___/                              '
 echo
 echo "Starting up Ansible Setup Service..."
 
-if [[ -a /certs/ansible-service.env ]]; then
-    source /certs/ansible-service.env
+if [[ -a /certs/ansible-setup.env ]]; then
+    source /certs/ansible-setup.env
 else
-    cp /opt/ansible-service.env /certs/ansible-service.env
+    cp /opt/ansible-setup.env /certs/ansible-setup.env
 fi
 
 rebuild_tower()

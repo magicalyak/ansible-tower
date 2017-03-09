@@ -48,7 +48,7 @@ Valid settings for ANSIBLE_TOWER_VER are:-
 + **`latest`**: will update ansible tower to the latest version available.
 + **`<specific-version>`**: will select a specific version (eg 3.1.0) of tower to install.
 
-Create a file called ansible-service.env in the /certs directory (you can copy the /opt/ansible-service.env)
+Create a file called ansible-setup.env in the /certs directory (you can copy the /opt/ansible-setup.env)
 * `ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
 * `ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols).
 * `SERVER_NAME=localhost` - hostname for tower to use (for cert generation) (this is not working). 
