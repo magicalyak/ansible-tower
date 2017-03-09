@@ -12,6 +12,12 @@ echo '                |___/                              '
 echo
 echo "Starting up Ansible Setup Service..."
 
+if [[ -a /certs/ansible-service.env ]]; then
+    source /certs/ansible-service.env
+else
+    cp /opt/ansible-service.env /certs/ansible-service.env
+fi
+
 rebuild_tower()
 {
 	echo "Performing rebuild of tower, this could take a while!"
@@ -21,7 +27,7 @@ rebuild_tower()
 	rm -rf /opt/ansible-tower-setup-*.tar.gz
 	mv ansible-tower-setup-* /opt/tower-setup
 	mv -f /opt/inventory /opt/tower-setup/inventory
-	echo "Setting password to $(ADMIN_PASSWORD) in inventory"
+	echo "Setting password to $ADMIN_PASSWORD in inventory"
 	sed -i "s/changeme/${ADMIN_PASSWORD}/g" /opt/tower-setup/inventory
 	echo "Patching locale bug in postgresql installation"
 	sed -i "s/lc_/#lc_/g" /opt/tower-setup/roles/postgres/templates/postgresql.conf.j2
@@ -46,7 +52,7 @@ rebuild_tower()
 }
 
 if [[ $SERVER_NAME ]]; then
-    echo "Setting hostname to $(SERVER_NAME)"
+    echo "Setting hostname to $SERVER_NAME"
 	if [[ -a /certs/.SERVER_NAME ]]; then
 		if [[ $(<.SERVER_NAME) != $SERVER_NAME ]]; then
 			echo $SERVER_NAME > /certs/.SERVER_NAME

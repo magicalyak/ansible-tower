@@ -78,7 +78,6 @@ RUN echo "Setting up ansible-setup service to run at boot" && \
     echo "SERVER_NAME=$SERVER_NAME" >> /opt/ansible-setup.env && \
     echo "ANSIBLE_TOWER_VER=$ANSIBLE_TOWER_VER" >> /opt/ansible-setup.env && \
     echo "ADMIN_PASSWORD=$ADMIN_PASSWORD" >> /opt/ansible-setup.env && \
-    cp /opt/ansible-setup.env /certs/ansible-setup.env && \
     chmod +x /docker-entrypoint.sh && \
     cp /opt/ansible-setup.service /etc/systemd/system/ansible-setup.service && \
     systemctl enable ansible-setup.service
