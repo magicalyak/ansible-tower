@@ -32,40 +32,29 @@ rebuild_tower()
 	fi
 }
 
-if [ "$1" = 'ansible-tower' ]; then
-	if [[ $SERVER_NAME ]]; then
-		if [[ -a /certs/.SERVER_NAME ]]; then
-			if [[ $(<.SERVER_NAME) != $SERVER_NAME ]]; then
-				echo $SERVER_NAME > /certs/.SERVER_NAME
-				touch /certs/.rebuild
-				rebuild_tower
-			fi
-		elif [[ $REBUILD = 1 ]]; then
-		    touch /certs/.rebuild
-		    rebuild_tower
+if [[ $SERVER_NAME ]]; then
+	if [[ -a /certs/.SERVER_NAME ]]; then
+		if [[ $(<.SERVER_NAME) != $SERVER_NAME ]]; then
+			echo $SERVER_NAME > /certs/.SERVER_NAME
+			touch /certs/.rebuild
+			rebuild_tower
 		fi
-#		echo "add ServerName to $SERVER_NAME"
-#		head -n 1 $APACHE_CONF | grep -q "^ServerName" \
-#		&& sed -i -e "s/^ServerName.*/ServerName $SERVER_NAME/" $APACHE_CONF \
-#		|| sed -i -e "1s/^/ServerName $SERVER_NAME\n/" $APACHE_CONF
 	fi
-	if [[ -a /certs/domain.crt && -a /certs/domain.key ]]; then
-		echo "copy new certs"
-		cp -r /certs/domain.crt /etc/tower/tower.cert
-		chown awx:awx /etc/tower/tower.cert
-		cp -r /certs/domain.key /etc/tower/tower.key
-		chown awx:awx /etc/tower/tower.key
-	fi
-	if [[ -a /certs/license ]]; then
-		echo "copy new license"
-		cp -r /certs/license /etc/tower/license
-		chown awx:awx /etc/tower/license
-	fi
-	ansible-tower-service start
-	sleep inf & wait
-elif [ "$1" = 'init' ]; then
-	exec /usr/sbin/init &
+elif [[ -a /certs/.rebuild ]]; then
 	rebuild_tower
-else
-	exec "$@"
 fi
+
+if [[ -a /certs/domain.crt && -a /certs/domain.key ]]; then
+	echo "copy new certs"
+	cp -r /certs/domain.crt /etc/tower/tower.cert
+	chown awx:awx /etc/tower/tower.cert
+	cp -r /certs/domain.key /etc/tower/tower.key
+	chown awx:awx /etc/tower/tower.key
+fi
+if [[ -a /certs/license ]]; then
+	echo "copy new license"
+	cp -r /certs/license /etc/tower/license
+	chown awx:awx /etc/tower/license
+fi
+ansible-tower-service start
+sleep inf & wait

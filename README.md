@@ -15,14 +15,13 @@ Note: this is still a work in progress and the first run is going to take a whil
 ```
 docker run -d -t \
 --name=ansible-tower \
+--cap-add=SYS_ADMIN \
 -p 8080:8080 \
 -p 443:443 \
 -e ANSIBLE_TOWER_VER=latest \
 -e ADMIN_PASSWORD=changme \
 -e SERVER_NAME=localhost \
--e container=docker \
 -v </path/to/library>:/certs \
--v /sys/fs/cgroup:/sys/fs/cgroup \
 magicalyak/ansible-tower
 ```
 ## Parameters
@@ -32,6 +31,7 @@ For example with a port -p external:internal - what this shows is the port mappi
 So -p 8080:80 would expose port 80 from inside the container to be accessible from the host's IP on port 8080
 http://192.168.x.x:8080 would show you what's running INSIDE the container on port 80.`
 
+* `--cap-add=SYS_ADMIN` - This is needed for systemd to work usually.
 * `-p 8080:8080` - Uses port 8080 for the Tower API, **required**.
 * `-p 443:443` - Uses port 443 for the Tower UI, **required**.
 * `-v /certs` - Certificate and license file location
@@ -39,7 +39,6 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 * `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
 * `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols).
 * `-e SERVER_NAME=localhost` - hostname for tower to use (for cert generation) (this is not working). 
-* `-e REBUILD=0` - set to 1 to rebuild ansible-tower. 
 
 It is based on centos7, for shell access whilst the container is running do `docker exec -it ansible-tower /bin/bash`.
 
@@ -54,7 +53,7 @@ For certs direction, add your license and certificates as follows:-
 + **`/certs/domain.crt`** - copied to /etc/tower/tower.cert
 + **`/certs/domain.kry`** - copied to /etc/tower/tower.key
 + **`/certs/license`** - copied to /etc/tower/license
-+ **`/certs/.rebuild`** - touch this file to ensure it rebuilds (required for first boot)
++ **`/certs/.rebuild`** - touch this file to ensure it rebuilds, **required for first boot**.
 
 ## Info
 
@@ -66,6 +65,7 @@ For certs direction, add your license and certificates as follows:-
 * ybalt/ansible-tower is the original basis for this Dockerfile
 
 ## Versions
++ **05.09.17:** Enabled setup to run as a service
 + **05.07.17:** Replaced Ubuntu with Centos7 and made tower install on first run
 + **05.04.17:** Added docker-entrypoint.sh from ybalt/ansible-tower github
 + **05.03.17:** Initial publish

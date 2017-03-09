@@ -12,12 +12,11 @@ MAINTAINER "magicalyak" <tom.gamull@gmail.com>
 ENV ANSIBLE_TOWER_VER=latest \
 ADMIN_PASSWORD=changeme \
 SERVER_NAME=localhost \
-REBUILD=0 \
 container=docker 
 
 ADD ./inventory /opt/inventory
 ADD ./ansible-setup.service /opt/ansible-setup.service
-ADD ./ansible-setup.sh /opt/ansible-setup.sh
+ADD ./docker-entrypoint.sh /docker-entrypoint.sh
 
 RUN \
 # Set systemd
@@ -64,16 +63,9 @@ RUN \
 EXPOSE 443 8080
 VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs /run /tmp
 
-# set runtime (from ybalt/ansible-tower)
-ADD ./docker-entrypoint.sh /docker-entrypoint.sh
+# set runtime options for ansibkle-setup
 RUN chmod +x /docker-entrypoint.sh && \
-    chmod a+x /opt/ansible-setup.sh && \
-    chmod a+x /opt/ansible-setup.service && \
-    chmod a+x /etc/rc.d/rc.local && \
-    echo "/opt/ansible-setup.sh" >> /etc/rc.local && \
     cp /opt/ansible-setup.service /etc/systemd/system/ansible-setup.service && \
-    chmod +x /etc/systemd/system/ansible-setup.service
-RUN systemctl enable ansible-setup.service
-#ENTRYPOINT ["/docker-entrypoint.sh"]
-#CMD ["ansible-tower"]
+    systemctl enable ansible-setup.service
+
 CMD [ "/usr/sbin/init" ]
