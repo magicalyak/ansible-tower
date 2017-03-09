@@ -36,8 +36,10 @@ RUN \
  yum -y install ansible sudo which wget && \
 
 # install Ansible Tower
+ echo "Downloading the $(ANSIBLE_TOWER_VER) version of Ansible Tower" && \
  cd /opt && \
  wget http://releases.ansible.com/awx/setup/ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
+ echo "Configuring Ansible Tower for setup at boot" && \
  tar -xvf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
  rm -rf ansible-tower-setup-${ANSIBLE_TOWER_VER}.tar.gz && \
  mv ansible-tower-setup-* /opt/tower-setup && \
@@ -46,14 +48,20 @@ RUN \
 
 # add passwords and fix locale issue
  sed -i -e 's/^\(Defaults\s*requiretty\)/#--- \1/'  /etc/sudoers && \
+ echo "Setting password to $(ADMIN_PASSWORD)" && \
  sed -i "s/changeme/${ADMIN_PASSWORD}/g" /opt/tower-setup/inventory && \
+ echo "Setting connection to $(SERVER_NAME)" && \
  echo -e '[local]\nlocalhost ansible_connection=local' > /etc/ansible/hosts && \
+ echo "Patching locale in postgresql install" && \
  sed -i "s/lc_/#lc_/g" /opt/tower-setup/roles/postgres/templates/postgresql.conf.j2 && \
+ echo "Patching IPv6 check in nginx due to docker container" && \
  sed -i "s/ansible_all_ipv6_addresses/[]/g" /opt/tower-setup/roles/nginx/templates/nginx.conf && \
+ echo "Setting rebuild flag in /certs in case it isn't mapped" && \
  mkdir -p /certs/.deleteme && \
  touch /certs/.rebuild && \
 
 # cleanup
+ echo "Cleaning up...." && \
  yum clean all && \
  rm -rf \
         /tmp/* \
@@ -61,10 +69,11 @@ RUN \
 
 # ports and volumes
 EXPOSE 443 8080
-VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs /run /tmp
+VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs
 
 # set runtime options for ansibkle-setup
-RUN chmod +x /docker-entrypoint.sh && \
+RUN echo "Setting up ansible-setup service to run at boot" && \
+    chmod +x /docker-entrypoint.sh && \
     cp /opt/ansible-setup.service /etc/systemd/system/ansible-setup.service && \
     systemctl enable ansible-setup.service
 
