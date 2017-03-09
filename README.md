@@ -35,11 +35,6 @@ http://192.168.x.x:8080 would show you what's running INSIDE the container on po
 * `-v /certs` - Certificate and license file location
 * `-v /var/lib/postgresql/9.4/main` - Database Folder to preseve data across container upgrades (this may not be working)
 
-
-* `-e ANSIBLE_TOWER_VER=latest` - Set to specific version of tower or put at latest.
-* `-e ADMIN_PASSWORD=changeme` - Administrator passwords (don't use special symbols).
-* `-e SERVER_NAME=localhost` - hostname for tower to use (for cert generation) (this is not working). 
-
 It is based on centos7, for shell access whilst the container is running do `docker exec -it ansible-tower /bin/bash`.
 
 ## Setting up the application
