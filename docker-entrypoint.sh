@@ -16,6 +16,7 @@ if [[ -a /certs/ansible-setup.env ]]; then
     source /certs/ansible-setup.env
 else
     cp /opt/ansible-setup.env /certs/ansible-setup.env
+    source /certs/ansible-setup.env
 fi
 
 rebuild_tower()
@@ -62,7 +63,8 @@ if [[ $SERVER_NAME ]]; then
 		    rebuild_tower
 		fi
 	fi
-elif [[ -a /certs/.rebuild ]]; then
+fi
+if [[ -a /certs/.rebuild ]]; then
 	rebuild_tower
 fi
 
