@@ -54,7 +54,7 @@ RUN \
 
 # ports and volumes
 EXPOSE 443 8080
-VOLUME /sys/fs/cgroup /var/lib/postgresql/9.4/main /certs
+VOLUME /sys/fs/cgroup /var/lib/pgsql/9.4/data /certs
 
 # set runtime options for ansibkle-setup
 RUN echo "Setting up ansible-setup service to run at boot" && \
