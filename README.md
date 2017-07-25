@@ -1,3 +1,4 @@
+[![](https://images.microbadger.com/badges/image/magicalyak/ansible-tower.svg)](https://microbadger.com/images/magicalyak/ansible-tower "Get your own image badge on microbadger.com")
 ```
                     _           _          _    
   /\/\   __ _  __ _(_) ___ __ _| /\_/\__ _| | __
